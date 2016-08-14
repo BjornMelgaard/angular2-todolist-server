@@ -1,10 +1,11 @@
 class Users::SessionsController < Devise::SessionsController
+  respond_to :json
 
   def create
     require "pry"; binding.pry;
     user = warden.authenticate!(auth_options)
     token = Tiddle.create_and_return_token(user, request)
-    render json: { authentication_token: token }
+    render id: user.id, email: user.email, authentication_token: token
   end
 
   def destroy
