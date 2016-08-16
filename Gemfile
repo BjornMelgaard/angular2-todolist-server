@@ -6,8 +6,8 @@ gem 'puma', '~> 3.0'
 gem 'rack-cors', :require => 'rack/cors'
 
 gem 'devise'
-gem 'omniauth'
-gem 'omniauth-facebook'
+# gem 'omniauth'
+# gem 'omniauth-facebook'
 gem 'tiddle'
 
 group :development do

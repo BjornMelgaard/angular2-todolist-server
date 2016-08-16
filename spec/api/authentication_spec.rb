@@ -3,60 +3,44 @@ require 'rails_helper'
 RSpec.describe "auth", :type => :request do
   let(:user_attr) { FactoryGirl.attributes_for(:user) }
 
-  it "registration" do
-    post '/auth/register',
-      params: { user: user_attr },
-      as: :json
-    expect_json_types(id: :int, email: :string)
+  context "user unregistered" do
 
-    post '/auth/register',
-      params: { user: user_attr },
-      as: :json
-    expect_json(errors: {:email=>["has already been taken"]})
+    it "can register, login and don't allow double registration" do
+      post '/auth/register', params: { user: user_attr }, as: :json
+      expect_json_types(id: :int, email: :string)
 
-    post '/auth/login',
-      params: { user: user_attr },
-      as: :json
-    expect_json_types(authentication_token: :string)
+      post '/auth/login', params: { user: user_attr }, as: :json
+      expect_json_types(authentication_token: :string)
 
-    headers = {
-      "X-USER-EMAIL" => user_attr[:email],
-      "X-USER-TOKEN" => json_body[:authentication_token]
-    }
-    get '/test/members_only',
-      headers: headers,
-      as: :json
-    expect(response).to be_success
+      post '/auth/register', params: { user: user_attr }, as: :json
+      expect_json(errors: {:email=>["has already been taken"]})
+    end
 
-    delete '/auth/logout',
-      headers: headers,
-      as: :json
-    expect(response).to be_success
+  end
 
-    get '/test/members_only',
-      headers: headers,
-      as: :json
-    expect(response).not_to be_success
+  context "user registered" do
+    before do
+      @user = FactoryGirl.create(:user)
+      @token = Tiddle.create_and_return_token(@user, FakeRequest.new)
+      @headers = {
+        "X-USER-EMAIL" => @user.email,
+        "X-USER-TOKEN" => @token
+      }
+    end
 
-    post '/auth/login',
-      params: { user: user_attr },
-      as: :json
-    expect_json_types(authentication_token: :string)
+    it "allow secret resource" do
+      get '/test/members_only', headers: @headers, as: :json
+      expect(response).to be_success
+    end
 
-    headers = {
-      "X-USER-EMAIL" => user_attr[:email],
-      "X-USER-TOKEN" => json_body[:authentication_token]
-    }
+    it "don't allow secret resource to signed out user" do
+      delete '/auth/logout', headers: @headers, as: :json
+      expect(response).to be_success
 
-    delete '/auth/register',
-      headers: headers,
-      as: :json
-    expect(response).to be_success
+      get '/test/members_only', headers: @headers, as: :json
+      expect(response).not_to be_success
+    end
 
-    delete '/auth/register',
-      headers: headers,
-      as: :json
-    expect(response).not_to be_success
   end
 
 end

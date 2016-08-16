@@ -4,6 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :token_authenticatable
+         # , :omniauthable, :omniauth_providers => [:facebook]
 
   has_many :authentication_tokens
 end
