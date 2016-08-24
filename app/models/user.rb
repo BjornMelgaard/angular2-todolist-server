@@ -6,5 +6,5 @@ class User < ApplicationRecord
          :token_authenticatable
          # , :omniauthable, :omniauth_providers => [:facebook]
 
-  has_many :authentication_tokens
+  has_many :authentication_tokens, :dependent => :destroy
 end
