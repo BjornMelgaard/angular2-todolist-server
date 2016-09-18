@@ -20,6 +20,16 @@ test:
   <<: *default
   database: db/test.sqlite3
 
+
+heroku: &heroku
+  adapter: postgresql
+  encoding: unicode
+  timeout: 5000
+  database: db2ghf2hlsljlt
+  username: vsxslcpjblnlwk
+  password: xOE7Mb4XeQ2tQ7R4MaTBnxw09w
+  port:     5432
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
 production:
-  <<: *default
-  database: db/production.sqlite3
+  <<: *heroku

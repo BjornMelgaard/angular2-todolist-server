@@ -1,14 +1,19 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.0.0'
-gem 'sqlite3'
+gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
+gem 'pg'
 gem 'puma', '~> 3.0'
 gem 'rack-cors', :require => 'rack/cors'
 
 gem 'devise'
-# gem 'omniauth'
-# gem 'omniauth-facebook'
+gem 'omniauth-facebook'
 gem 'tiddle'
+gem 'acts_as_list'
+gem 'active_model_serializers'
+
+# File uploader
+gem 'carrierwave'
+gem 'mini_magick'
 
 group :development do
   gem 'listen'
@@ -20,6 +25,7 @@ end
 
 group :development, :test do
   gem 'byebug', platform: :mri
+  gem 'sqlite3'
 
   # RSpec
   gem 'rspec-rails'
