@@ -28,6 +28,9 @@ module Todolist
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
+
     # config.active_record.raise_in_transactional_callbacks = true
   end
 end

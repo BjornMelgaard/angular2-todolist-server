@@ -21,7 +21,7 @@ class TasksController < ApplicationController
   end
 
   def done
-    @task.update(done: params[:task][:done])
+    @task.update(done: params[:done])
     render json: @task
   end
 
@@ -31,7 +31,8 @@ class TasksController < ApplicationController
   end
 
   def deadline
-    @task.update(deadline: params[:task][:deadline])
+    @task.update(deadline: params[:deadline])
+    puts params
     render json: @task
   end
 

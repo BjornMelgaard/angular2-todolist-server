@@ -7,6 +7,7 @@ class CommentsController < ApplicationController
     @comment = Comment.new(comment_params)
 
     if @comment.save
+      puts params[:attachments]
       Attachment.where(id: params[:attachments]).update_all(comment_id: @comment.id)
       render json: @comment
     else
